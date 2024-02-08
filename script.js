@@ -18,7 +18,6 @@ const WINNING_COMBINATIONS = [
 
 let currentPlayer = 'circle';
 
-
 function init() {
     render();
 }
@@ -83,7 +82,7 @@ function isGameFinished() {
 
 function getWinningCombination() {
     for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
-        const [a, b, c] = WINNING_COMBINATIONS[i];
+        const [a, b, c] = WINNING_COMBINATIONS[i]; // [0, 1, 2]
         if (fields[a] === fields[b] && fields[b] === fields[c] && fields[a] !== null) {
             return WINNING_COMBINATIONS[i];
         }
@@ -91,17 +90,17 @@ function getWinningCombination() {
     return null;
 }
 
-
 function generateCircleSVG() {
     const color = '#00B0EF';
     const width = 70;
     const height = 70;
     
     return `<svg width="${width}" height="${height}">
-              <circle cx="35" cy="35" r="30" stroke="${color}" stroke-width="5" fill="none">
-                <animate attributeName="stroke-dasharray" from="0 188.5" to="188.5 0" dur="0.2s" fill="freeze" />
-              </circle>
-            </svg>`;
+          <circle cx="35" cy="35" r="30" stroke="${color}" stroke-width="5" fill="none">
+            <animate attributeName="stroke-dasharray" from="0 188.5" to="188.5 0" dur="0.2s" fill="freeze" />
+          </circle>
+        </svg>
+    `;
 }
 
 
@@ -111,24 +110,21 @@ function generateCrossSVG() {
     const height = 70;
     
     const svgHtml = `
-      <svg width="${width}" height="${height}">
-        <line x1="0" y1="0" x2="${width}" y2="${height}"
-          stroke="${color}" stroke-width="5">
-          <animate attributeName="x2" values="0; ${width}" dur="200ms" />
-          <animate attributeName="y2" values="0; ${height}" dur="200ms" />
-        </line>
-        <line x1="${width}" y1="0" x2="0" y2="${height}"
-          stroke="${color}" stroke-width="5">
-          <animate attributeName="x2" values="${width}; 0" dur="200ms" />
-          <animate attributeName="y2" values="0; ${height}" dur="200ms" />
-        </line>
+        <svg width="${width}" height="${height}">
+            <line x1="0" y1="0" x2="${width}" y2="${height}"
+              stroke="${color}" stroke-width="5">
+              <animate attributeName="x2" values="0; ${width}" dur="200ms" />
+              <animate attributeName="y2" values="0; ${height}" dur="200ms" />
+            </line>
+            <line x1="${width}" y1="0" x2="0" y2="${height}"
+              stroke="${color}" stroke-width="5">
+              <animate attributeName="x2" values="${width}; 0" dur="200ms" />
+              <animate attributeName="y2" values="0; ${height}" dur="200ms" />
+            </line>
       </svg>
     `;
-    
     return svgHtml;
 }
-
-
 
 function drawWinningLine(combination) {
     const lineColor = '#ffffff';
@@ -138,6 +134,8 @@ function drawWinningLine(combination) {
     const endCell = document.querySelectorAll(`td`)[combination[2]];
     const startRect = startCell.getBoundingClientRect();
     const endRect = endCell.getBoundingClientRect();
+    
+    const contentRect = document.getElementById('content').getBoundingClientRect();
     
     const lineLength = Math.sqrt(
         Math.pow(endRect.left - startRect.left, 2) + Math.pow(endRect.top - startRect.top, 2)
@@ -149,8 +147,9 @@ function drawWinningLine(combination) {
     line.style.width = `${lineLength}px`;
     line.style.height = `${lineWidth}px`;
     line.style.backgroundColor = lineColor;
-    line.style.top = `${ startRect.top + startRect.height / 2 - lineWidth / 2 } px`;
-    line.style.left = `${ startRect.left + startRect.width / 2 } px`;
-    line.style.transform = `rotate(${ lineAngle }rad)`;
+    line.style.top = `${startRect.top + startRect.height / 2 - lineWidth / 2 - contentRect.top}px`;
+    line.style.left = `${startRect.left + startRect.width / 2 - contentRect.left}px`;
+    line.style.transform = `rotate(${lineAngle}rad)`;
+    line.style.transformOrigin = `top left`;
     document.getElementById('content').appendChild(line);
 }
