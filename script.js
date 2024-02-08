@@ -48,6 +48,21 @@ function render() {
     contentDiv.innerHTML = tableHtml;
 }
 
+function restartGame(){
+    fields = [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+    ];
+    render();
+}
+
 function handleClick(cell, index) {
     if (fields[index] === null) {
         fields[index] = currentPlayer;
